@@ -21,7 +21,6 @@ map ,rc :!bundle exec rspec % --format documentation<CR>
 map ,ra :!bundle exec rspec . --format documentation<CR>
 
 
-
 " Agora os bundles
 " Navegador para os buffers abertos
 Bundle 'vim-scripts/bufexplorer.zip'
@@ -48,7 +47,7 @@ Bundle 'godlygeek/csapprox'
 Bundle 'evidens/vim-twig'
 
 " Números das linhas relativo no modo normal e absoluto no modo insert
-" Bundle 'myusuf3/numbers.vim'
+Bundle 'myusuf3/numbers.vim'
 
 " HTML5
 Bundle 'othree/html5.vim'
@@ -87,6 +86,12 @@ Bundle 'nanotech/jellybeans.vim'
 
 " Ack to search files
 Bundle 'mileszs/ack.vim'
+
+" Auto pairs to close open stuff
+Bundle 'jiangmiao/auto-pairs'
+
+" Syntax Highlight for Dockerfiles
+Bundle 'docker/docker', {'rtp': '/contrib/syntax/vim/'}
 
 "
 " Abaixo estão os Bundles que precisam de algumas opções/personalizações
@@ -203,8 +208,8 @@ set mouse=a
 
 set autoread        " Recarrega arquivos alterados em disco automaticamente
 
-set tw=120          " Define a largura do texto como 120 caracteres
-set colorcolumn=121 " Deixa a coluna 120 colorida
+set tw=80           " Define a largura do texto como 80 caracteres
+set colorcolumn=90  " Deixa a coluna 90 colorida
 set incsearch       " Pesquisa incremental
 set hlsearch        " Highligth search :)
 set ignorecase      " Pesquisa ignora caixa alta e baixa
@@ -213,7 +218,19 @@ set exrc            " enable per-directory .vimrc files
 set secure          " disable unsafe commands in local .vimrc files
 set expandtab       " insere space chars toda vez que tab for pressionado
 
-autocmd BufWritePre * :%s/\s\+$//e  " to remove whitespaces
+" autocmd BufWritePre * :%s/\s\+$//e
+au Bufread,BufNewFile *.md
+set filetype=markdown
+
+fun! StripTrailingWhitespace()
+  " don't strip on these filetypes
+  if &ft =~ 'modula2\|markdown|mkd|md'
+    return
+  endif
+  %s/\s\+$//e
+endfun
+
+autocmd BufWritePre * call StripTrailingWhitespace()
 
 " Mapas, atalhos, etc
 "
@@ -244,9 +261,5 @@ nnoremap ,white :%s/\s\+$//<CR>
 " No bashrc, zshrc ou similar, faça algo como
 " export TERM="xterm-256color"
 
-" Cores a considerar:
-" colo zenburn
-" let g:solarized_termcolors=256
-" colorscheme bubblegum (not working)
-" Use the colorscheme from above
-colorscheme jellybeans
+let g:solarized_termcolors=256
+colorscheme bubblegum-256-dark

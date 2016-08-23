@@ -191,14 +191,17 @@ endfun
 autocmd BufWritePre * call StripTrailingWhitespace()
 
 " airline configs
-let g:airline_theme='bubblegum'
 let g:airline_powerline_fonts=1
+let g:airline_theme='bubblegum'
 let g:airline_enable_branch=1
 let g:airline_enable_syntastic=1
-"let g:airline_detect_paste=1
+let g:airline_detect_paste=1
 
 " Starts matchmaker(to highlight repeated words)
 let g:matchmaker_enable_startup = 1
+
+" NERDTree shortcut
+nmap <leader>t :NERDTreeToggle<cr>
 
 let g:solarized_termcolors=256
 colorscheme bubblegum-256-dark

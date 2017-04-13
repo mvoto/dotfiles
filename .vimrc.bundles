@@ -85,6 +85,14 @@ Plug 'qstrahl/vim-matchmaker'
 Plug 'airblade/vim-gitgutter'
 " Sidebar navigation tree
 Plug 'scrooloose/nerdtree'
+" Grep made easy
+Plug 'mileszs/ack.vim'
+" Elixir FTW
+Plug 'elixir-lang/vim-elixir'
+" More Elixir love
+Plug 'slashmili/alchemist.vim'
+" Search with ack
+Plug 'mileszs/ack.vim'
 
 if filereadable(expand("~/.vimrc.bundles.local"))
   source ~/.vimrc.bundles.local

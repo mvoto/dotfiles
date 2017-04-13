@@ -1,3 +1,6 @@
+" This configs were updated to use neovim and True Colors(if using Terminator,
+" it requires latest versions to be installed)
+
 " Leader
 let mapleader = ","
 
@@ -195,7 +198,7 @@ autocmd BufWritePre * call StripTrailingWhitespace()
 
 " airline configs
 let g:airline_powerline_fonts=1
-let g:airline_theme='bubblegum'
+let g:airline_theme='kalisi'
 let g:airline_enable_branch=1
 let g:airline_enable_syntastic=1
 let g:airline_detect_paste=1
@@ -206,6 +209,10 @@ let g:matchmaker_enable_startup = 1
 " NERDTree shortcut
 nmap <leader>n :NERDTreeToggle<cr>
 
-set t_Co=256
-let g:solarized_termcolors=256
-colorscheme bubblegum-256-dark
+" True Colors
+set termguicolors
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+
+" Colorscheme
+set background=dark
+colorscheme hybrid

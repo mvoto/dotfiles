@@ -3,74 +3,107 @@ call plug#begin('~/.vim/plugged')
 
 " Make sure you use single quotes
 " Define bundles via Github repos
-"
+
+" Vim Core
 " Run commands via an interactive shell
 Plug 'christoomey/vim-run-interactive'
 " Ctrl+P to find and open files
 Plug 'ctrlpvim/ctrlp.vim'
-" Go development
-" Plug 'fatih/vim-go'
-" Awesome test runner helper i.e.: :TestNearest, :TestFile, :TestSuite
-Plug 'janko-m/vim-test'
-" Coffeescript support
-Plug 'kchmck/vim-coffee-script'
 " Create files and folders i.e.: foo/bar/zoo.rb creates /bar/ if does not exist
 Plug 'pbrisbin/vim-mkdir'
-" Syntax checking
-Plug 'scrooloose/syntastic'
-" Slim syntax highlight
-" Plug 'slim-template/vim-slim'
 " To install vim plugins(using with vim-plug now)
 Plug 'tpope/vim-bundler'
-" Enclosing blocks, such as each..do / if..end / class..end
-Plug 'tpope/vim-endwise'
-" Linux commands helpers
-Plug 'tpope/vim-eunuch'
-" Git awesomeness
-Plug 'tpope/vim-fugitive'
-" Granular project configuration
-" Plug 'tpope/vim-projectionist'
-" Both vim-rails and vim-rake are helpers to make it easy to generate stuff
-Plug 'tpope/vim-rails'
-Plug 'tpope/vim-rake'
 " Repeats last command with .
 Plug 'tpope/vim-repeat'
-" Fugitive is git, rhubarb is Hub(from GitHub)
-Plug 'tpope/vim-rhubarb'
-" Quoting / parenthesing made easy
-Plug 'tpope/vim-surround'
-" Ruby syntax highlight, smart indention, compilers and autocompletion
-Plug 'vim-ruby/vim-ruby'
-" Comments block: i.e: g + c + 5j
-Plug 'vim-scripts/tComment'
-" HTML5
-Plug 'othree/html5.vim'
-" CSS3
-Plug 'hail2u/vim-css3-syntax'
+" Linux commands helpers
+Plug 'tpope/vim-eunuch'
 " Numbers from above and bellow lines from 0
 Plug 'myusuf3/numbers.vim'
-" Status line at bottom
-Plug 'bling/vim-airline'
-" Airline themes
-Plug 'vim-airline/vim-airline-themes'
-" Highlight repeated words
-Plug 'qstrahl/vim-matchmaker'
-" Git current changes at sidebar
-Plug 'airblade/vim-gitgutter'
 " Sidebar navigation tree
 Plug 'scrooloose/nerdtree'
 " Grep made easy
 Plug 'mileszs/ack.vim'
+" EditorConfig for common configs(things like trim_trailing_whitespace and tab width)
+Plug 'sgur/vim-editorconfig'
+" Asynchronous linting and make framework for Neovim/Vim
+Plug 'neomake/neomake'
+
+" Syntax and helpers
+" Enclosing blocks, such as each..do / if..end / class..end
+Plug 'tpope/vim-endwise'
+" Quoting / parenthesing made easy
+Plug 'tpope/vim-surround'
+" Awesome test runner helper i.e.: :TestNearest, :TestFile, :TestSuite
+Plug 'janko-m/vim-test'
+" Syntax checking
+Plug 'scrooloose/syntastic'
+" Comments block: i.e: g + c + 5j
+Plug 'vim-scripts/tComment'
+" Highlight repeated words
+Plug 'qstrahl/vim-matchmaker'
+
+" Languages and frameworks
+" Ruby syntax highlight, smart indention, compilers and autocompletion
+Plug 'vim-ruby/vim-ruby'
+" Both vim-rails and vim-rake are helpers to make it easy to generate stuff
+Plug 'tpope/vim-rails'
+Plug 'tpope/vim-rake'
+" Go development
+Plug 'fatih/vim-go'
 " Elixir FTW
 Plug 'elixir-lang/vim-elixir'
 " More Elixir love
 Plug 'slashmili/alchemist.vim'
+" GraphQL
+Plug 'jparise/vim-graphql'
+" HTML5
+Plug 'othree/html5.vim'
+" CSS3
+Plug 'hail2u/vim-css3-syntax'
+" Scss
+Plug 'cakebaker/scss-syntax.vim'
+" JXS - React love !
+Plug 'mxw/vim-jsx'
+" Js syntax
+Plug 'pangloss/vim-javascript'
+" Coffeescript support
+Plug 'kchmck/vim-coffee-script'
+
+" Linters
+" Code Climate lint
+Plug 'wfleming/vim-codeclimate'
+" Rubocop FTW
+Plug 'ngmy/vim-rubocop'
+
+" GIT and Hub
+" Git awesomeness
+Plug 'tpope/vim-fugitive'
+" Git current changes at sidebar
+Plug 'airblade/vim-gitgutter'
+" Fugitive is git, rhubarb is Hub(from GitHub)
+Plug 'tpope/vim-rhubarb'
+" Git status for NERDTree
+" Plug 'Xuyuanp/nerdtree-git-plugin'
+
+" Visual and Themes
+" Status line at bottom
+Plug 'bling/vim-airline'
+" Airline themes
+Plug 'vim-airline/vim-airline-themes'
 " Search with ack
 Plug 'mileszs/ack.vim'
 " Kalisi colorscheme
 Plug 'freeo/vim-kalisi'
 " Hybrid colorscheme
-Plug 'w0ng/vim-hybrid'
+" Plug 'kristijanhusak/vim-hybrid-material'
+" New Railscasts colorscheme
+Plug 'carakan/new-railscasts-theme'
+
+" Ctags - for better navigation
+Plug 'universal-ctags/ctags'
+
+" Auto generate / manage ctags
+Plug 'craigemery/vim-autotag'
 
 " Initialize plugin system
 call plug#end()

@@ -78,9 +78,19 @@ if executable('ag')
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
   let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 
-
   " ag is fast enough that CtrlP doesn't need to cache
   let g:ctrlp_use_caching = 0
+
+  " CtrlP highlight color
+  let g:ctrlp_buffer_func = { 'enter': 'BrightHighlightOn', 'exit':  'BrightHighlightOff', }
+
+  function BrightHighlightOn()
+    hi CursorLine guibg=#4d5056
+  endfunction
+
+  function BrightHighlightOff()
+    hi CursorLine guibg=#191919
+  endfunction
 
   if !exists(":Ag")
     command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
@@ -89,7 +99,7 @@ if executable('ag')
 endif
 
 " Make it obvious where 80 characters is
-set textwidth=80
+set textwidth=100
 set colorcolumn=+1
 
 " Numbers
@@ -131,7 +141,7 @@ nnoremap <silent> <leader>gt :TestVisit<CR>
 nnoremap <Leader>r :RunInInteractiveShell<space>
 
 " Treat <li> and <p> tags like the block tags they are
-let g:html_indent_tags = 'li\|p'
+" let g:html_indent_tags = 'li\|p'
 
 " Open new split panes to right and bottom, which feels more natural
 set splitbelow
@@ -142,6 +152,9 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
+
+" Yank current relative file path
+nnoremap <leader>yp :let @+ = expand("%")<CR>
 
 " configure syntastic syntax checking to check on open as well as save
 let g:syntastic_check_on_open=1
@@ -159,16 +172,7 @@ set complete+=kspell
 " Always use vertical diffs
 set diffopt+=vertical
 
-" Copy from vim to clipboard(http://vim.wikia.com/wiki/Accessing_the_system_clipboard)
-" It depends on vim compiled with xterm_clipboard(vim --version |grep clipboard)
-" set clipboard=unnamedplus
-if has("clipboard")
-  set clipboard=unnamed " copy to the system clipboard
-
-  if has("unnamedplus") " X11 support
-    set clipboard+=unnamedplus
-  endif
-endif
+set clipboard+=unnamedplus
 
 if has('persistent_undo')
   set undodir=~/.vimundo      " undo dir
@@ -196,18 +200,92 @@ fun! StripTrailingWhitespace()
 endfun
 autocmd BufWritePre * call StripTrailingWhitespace()
 
+" Code climate linter config: https://github.com/wfleming/vim-codeclimate#variables
+autocmd FileType javascript let b:codeclimateflags="--engine eslint"
+autocmd FileType ruby let b:codeclimateflags="--engine rubocop"
+autocmd FileType scss let b:codeclimateflags="--engine scss-lint"
+
+" JSX syntax on js files
+let g:jsx_ext_required = 0
+
 " airline configs
 let g:airline_powerline_fonts=1
-let g:airline_theme='kalisi'
+" let g:airline_theme='material'
 let g:airline_enable_branch=1
 let g:airline_enable_syntastic=1
 let g:airline_detect_paste=1
 
+" theme's config to bold methods etc.
+let g:enable_bold_font = 1
+
 " Starts matchmaker(to highlight repeated words)
 let g:matchmaker_enable_startup = 1
 
-" NERDTree shortcut
+" NeoMake options
+call neomake#configure#automake('rw')
+let g:neomake_javascript_enabled_makers = ['eslint_d', 'flow']
+let g:neomake_sass_enabled_makers = ['sasslint']
+let g:neomake_scss_enabled_makers = ['sasslint']
+let g:neomake_ruby_enabled_makers = ['rubocop']
+let g:neomake_ruby_shell_makers = ['shellcheck']
+let g:neomake_ruby_sh_makers = ['shellcheck']
+let g:neomake_ruby_bash_makers = ['shellcheck']
+
+" CodeClimate
+autocmd FileType javascript let b:codeclimateflags="-e eslint -e fixme -e duplication"
+autocmd FileType ruby let b:codeclimateflags="-e rubocop -e brakeman -e duplication -e fixme"
+autocmd FileType scss let b:codeclimateflags="-e csslint -e fixme -e duplication"
+
+" Git
+" Auto-clean fugitive buffers
+autocmd BufReadPost fugitive://* set bufhidden=delete
+" Auto turn on spell checker in git commit message buffer
+autocmd BufReadPost COMMIT_EDITMSG setlocal spell
+autocmd BufReadPost PULLREQ_EDITMSG setlocal spell
+autocmd BufReadPost PULLREQ_EDITMSG execute "-1read! git branch --points-at HEAD | sed 's/^\* *//g'"
+
+" Asana + hub
+autocmd BufReadPost PULLREQ_EDITMSG setlocal spell
+autocmd BufReadPost PULLREQ_EDITMSG call InitPullRequest()
+
+function! InitPullRequest()
+  let branch_name = system("git branch --points-at HEAD | cut -f2- -d' '")
+  let commits = split(system("git log master.. --pretty='format:%B'"), '\n\n')
+  let think_task_id =  toupper(matchstr(branch_name, '\v(rmrf|cf|gs|uxf|tfg)-\d+'))
+
+  let asana_task = system('asana tasks | grep -i ' . think_task_id)
+  let asana_task_id = matchstr(asana_task, '\v\d+')
+  let asana_task_title = matchstr(asana_task, '\v\[' . think_task_id . '\].*\ze\n')
+
+  call system('asana browse ' . asana_task_id)
+  execute 'normal! dG'
+  silent put! =branch_name
+  silent put =''
+  silent put ='[' . asana_task_title . ']()'
+  let asana_task_url_pos = getcurpos()
+  let asana_task_url_pos[2] = strlen(getline(asana_task_url_pos[1])) " end of the line
+  silent put =''
+  silent put ='Changes'
+  silent put ='======='
+  silent put =''
+  let before_commits_pos = getcurpos()
+  silent put =commits
+  call cursor(asana_task_url_pos[1], asana_task_url_pos[2], asana_task_url_pos[3])
+  call input('Copy URL from Asana browser tab')
+  execute 'normal! "+PGdk'
+
+  execute 'g/^/m' . before_commits_pos[1]
+  execute 'normal! G'
+  silent execute before_commits_pos[1] + 1 . ',.s/^/- /'
+endfunction
+
+" NERDTree shortcuts and hidden files
 nmap <leader>n :NERDTreeToggle<cr>
+nmap <leader>f :NERDTreeFind<cr>
+let NERDTreeShowHidden=1
+
+" Autotags config(ctags for better navigation)
+let g:autotagTagsFile="my-ctags"
 
 " True Colors
 set termguicolors
@@ -215,4 +293,5 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 " Colorscheme
 set background=dark
-colorscheme hybrid
+" colorscheme hybrid_material
+colorscheme new-railscasts
